@@ -18,9 +18,9 @@ submit.onclick = function(){
                 };
 
                 var token = {};
-                token.ha = glyph.advanceWidth;
-                token.x_min = glyph.xMin;
-                token.x_max = glyph.xMax;
+                token.ha = Math.round(glyph.advanceWidth * scale);
+                token.x_min = Math.round(glyph.xMin * scale);
+                token.x_max = Math.round(glyph.xMax * scale);
                 token.o = ""
                 glyph.path.commands.forEach(function(command){
                     if (command.type.toLowerCase() === "z") {return;}
