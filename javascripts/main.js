@@ -1,5 +1,6 @@
 var convert = document.getElementById("convert");
 var fileInput = document.getElementById("fileInput");
+var reverseTypeface = document.getElementById("reverseTypeface");
 convert.onclick = function(){
 
     [].forEach.call(fileInput.files,function(file){
@@ -42,6 +43,7 @@ var convert =function(font){
             token.x_min = Math.round(glyph.xMin * scale);
             token.x_max = Math.round(glyph.xMax * scale);
             token.o = ""
+            if (reverseTypeface.checked) {glyph.path.commands = reverseCommands(glyph.path.commands);}
             glyph.path.commands.forEach(function(command,i){
                 if (command.type.toLowerCase() === "c") {command.type = "b";}
                 token.o += command.type.toLowerCase();
@@ -93,4 +95,46 @@ var convert =function(font){
         result.cssFontStyle = "normal";
     };
     return "if (_typeface_js && _typeface_js.loadFace) _typeface_js.loadFace("+ JSON.stringify(result) + ");"
+};
+
+var reverseCommands = function(commands){
+    
+    var paths = [];
+    var path;
+    
+    commands.forEach(function(c){
+        if (c.type.toLowerCase() === "m"){
+            path = [c];
+            paths.push(path);
+        } else if (c.type.toLowerCase() !== "z") {
+            path.push(c);
+        }
+    });
+    
+    var reversed = [];
+    paths.forEach(function(p){
+        var result = {"type":"m" , "x" : p[p.length-1].x, "y": p[p.length-1].y};
+        reversed.push(result);
+        
+        for(var i = p.length - 1;i > 0; i-- ){
+            var command = p[i];
+            result = {"type":command.type};
+            if (command.x2 !== undefined && command.y2 !== undefined){
+                result.x1 = command.x2;
+                result.y1 = command.y2;
+                result.x2 = command.x1;
+                result.y2 = command.y1;
+            } else if (command.x1 !== undefined && command.y1 !== undefined){
+                result.x1 = command.x1;
+                result.y1 = command.y1;
+            }
+            result.x =  p[i-1].x;
+            result.y =  p[i-1].y;
+            reversed.push(result);
+        }
+        
+    });
+    
+    return reversed;
+    
 };
