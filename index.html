@@ -28,13 +28,17 @@
       <section id="main_content" class="inner">
           <h3> TypeFace.js converter</h3>
 
-          <div> This convert a font to a typeface.js font.</div>
+          <div> This converts a font to a typeface.js font.</div>
 
-          <div>
-          <input id="fileInput" type="file" multiple/>
+          <div class="inputRow">
+            <input id="fileInput" type="file" multiple/>
           </div>
-          <div>
-          <input id="reverseTypeface" type="checkbox"/>Reverse font direction.
+          <div class="inputRow">
+              <input id="reverseTypeface" type="checkbox"/>
+              <label for="reverseTypeface">
+                Reverse font direction.
+                <p class="deemphasized">Use this to fix issues with holes in characters like 'd', 'o' and '8'.</p>
+              </label>
           </div>
           <div>
           <input id="convert" type="submit" title= "convert" value="Convert" />
