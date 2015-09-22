@@ -101,6 +101,9 @@ var convert = function(font){
     } else {
         result.cssFontStyle = "normal";
     };
+    
+    alert( "Three.js font-family name: "  + result.familyName.toLowerCase());
+    
     return "if (_typeface_js && _typeface_js.loadFace) _typeface_js.loadFace("+ JSON.stringify(result) + ");"
 };
 
