@@ -101,7 +101,7 @@ var convert = function(font){
     } else {
         result.cssFontStyle = "normal";
     };
-    return "if (_typeface_js && _typeface_js.loadFace) _typeface_js.loadFace("+ JSON.stringify(result) + ");"
+    return JSON.stringify(result);
 };
 
 var reverseCommands = function(commands){
