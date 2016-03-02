@@ -257,7 +257,7 @@ form {
 }
 
 .inputRow {
-  margin: 10px 0;
+  margin: 15px 0;
 }
 
 .deemphasized {
@@ -378,7 +378,10 @@ Full-Width Styles
   background: #212121;
 }
 
-
+.col {
+    width:50%;
+    float:left;
+}
 
 /*******************************************************************************
 Small Device Styles
@@ -430,6 +433,12 @@ Small Device Styles
     min-width: 320px;
     max-width: 480px;
     font-size: 11px;
+  }
+
+  .col {
+    margin:15px 0 0;
+    float:none;
+    width:100%;
   }
 
 }
