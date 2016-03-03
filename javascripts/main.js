@@ -1,6 +1,7 @@
 var convert = document.getElementById("convert");
 var fileInput = document.getElementById("fileInput");
 var reverseTypeface = document.getElementById("reverseTypeface");
+var filetypeJson = document.getElementById("filetypeJson");
 convert.onclick = function(){
 
     [].forEach.call(fileInput.files,function(file){
@@ -8,7 +9,7 @@ convert.onclick = function(){
         reader.addEventListener( 'load', function ( event ) {
             var font = opentype.parse(event.target.result);
             var result = convert(font);
-            exportString(result,font.familyName + "_" + font.styleName  + ".js");
+            exportString(result,font.familyName + "_" + font.styleName + ( filetypeJson.checked ? ".json" : ".js" ) );
         }, false );
         reader.readAsArrayBuffer( file );
     });
@@ -101,7 +102,12 @@ var convert = function(font){
     } else {
         result.cssFontStyle = "normal";
     };
-    return "if (_typeface_js && _typeface_js.loadFace) _typeface_js.loadFace("+ JSON.stringify(result) + ");"
+
+    if(filetypeJson.checked) {
+        return JSON.stringify(result);
+    } else {
+        return "if (_typeface_js && _typeface_js.loadFace) _typeface_js.loadFace("+ JSON.stringify(result) + ");"
+    }
 };
 
 var reverseCommands = function(commands){
