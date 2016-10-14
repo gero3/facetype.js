@@ -1,8 +1,15 @@
-var convert = document.getElementById("convert");
+var convertButton = document.getElementById("convert");
 var fileInput = document.getElementById("fileInput");
 var reverseTypeface = document.getElementById("reverseTypeface");
 var filetypeJson = document.getElementById("filetypeJson");
-convert.onclick = function(){
+var restrictCharactersCheck = document.getElementById("restrictCharacters");
+var restrictCharacterSetInput = document.getElementById("restrictCharacterSet");
+
+window.onload = function (){
+    restrictCharacterSetInput.disabled = !restrictCharactersCheck.checked;
+}
+
+convertButton.onclick = function(){
 
     [].forEach.call(fileInput.files,function(file){
         var reader = new FileReader();
@@ -13,6 +20,10 @@ convert.onclick = function(){
         }, false );
         reader.readAsArrayBuffer( file );
     });
+};
+
+restrictCharactersCheck.onchange = function(){
+    restrictCharacterSetInput.disabled = !restrictCharactersCheck.checked;
 };
 
 var exportString = function ( output, filename ) {
@@ -45,37 +56,41 @@ var convert = function(font){
 
     font.glyphs.forEach(function(glyph){
         if (glyph.unicode !== undefined) {
+            var glyphCharacter = String.fromCharCode (glyph.unicode);
+            var needToExport = !restrictCharactersCheck.checked || restrictCharacterSetInput.value.indexOf (glyphCharacter) != -1;
+            if (needToExport) {
 
-            var token = {};
-            token.ha = Math.round(glyph.advanceWidth * scale);
-            token.x_min = Math.round(glyph.xMin * scale);
-            token.x_max = Math.round(glyph.xMax * scale);
-            token.o = ""
-            if (reverseTypeface.checked) {glyph.path.commands = reverseCommands(glyph.path.commands);}
-            glyph.path.commands.forEach(function(command,i){
-                if (command.type.toLowerCase() === "c") {command.type = "b";}
-                token.o += command.type.toLowerCase();
-                token.o += " "
-                if (command.x !== undefined && command.y !== undefined){
-                    token.o += Math.round(command.x * scale);
-                    token.o += " "
-                    token.o += Math.round(command.y * scale);
-                    token.o += " "
-                }
-                if (command.x1 !== undefined && command.y1 !== undefined){
-                    token.o += Math.round(command.x1 * scale);
-                    token.o += " "
-                    token.o += Math.round(command.y1 * scale);
-                    token.o += " "
-                }
-                if (command.x2 !== undefined && command.y2 !== undefined){
-                    token.o += Math.round(command.x2 * scale);
-                    token.o += " "
-                    token.o += Math.round(command.y2 * scale);
-                    token.o += " "
-                }
-            });
-            result.glyphs[String.fromCharCode(glyph.unicode)] = token;
+				var token = {};
+				token.ha = Math.round(glyph.advanceWidth * scale);
+				token.x_min = Math.round(glyph.xMin * scale);
+				token.x_max = Math.round(glyph.xMax * scale);
+				token.o = ""
+				if (reverseTypeface.checked) {glyph.path.commands = reverseCommands(glyph.path.commands);}
+				glyph.path.commands.forEach(function(command,i){
+					if (command.type.toLowerCase() === "c") {command.type = "b";}
+					token.o += command.type.toLowerCase();
+					token.o += " "
+					if (command.x !== undefined && command.y !== undefined){
+						token.o += Math.round(command.x * scale);
+						token.o += " "
+						token.o += Math.round(command.y * scale);
+						token.o += " "
+					}
+					if (command.x1 !== undefined && command.y1 !== undefined){
+						token.o += Math.round(command.x1 * scale);
+						token.o += " "
+						token.o += Math.round(command.y1 * scale);
+						token.o += " "
+					}
+					if (command.x2 !== undefined && command.y2 !== undefined){
+						token.o += Math.round(command.x2 * scale);
+						token.o += " "
+						token.o += Math.round(command.y2 * scale);
+						token.o += " "
+					}
+				});
+				result.glyphs[String.fromCharCode(glyph.unicode)] = token;
+			}
         };
     });
     result.familyName = font.familyName;
