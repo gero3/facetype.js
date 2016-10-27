@@ -54,10 +54,34 @@ var convert = function(font){
     var result = {};
     result.glyphs = {};
 
+	var restriction = {
+		range : null,
+		set : null
+	};
+	
+	if (restrictCharactersCheck.checked) {
+		var restrictContent = restrictCharacterSetInput.value;
+		var rangeSeparator = '-';
+		if (restrictContent.indexOf (rangeSeparator) != -1) {
+			var rangeParts = restrictContent.split (rangeSeparator);
+			if (rangeParts.length === 2 && !isNaN (rangeParts[0]) && !isNaN (rangeParts[1])) {
+				restriction.range = [parseInt (rangeParts[0]), parseInt (rangeParts[1])];
+			}
+		}
+		if (restriction.range === null) {
+			restriction.set = restrictContent;
+		}
+	}
+	
     font.glyphs.forEach(function(glyph){
         if (glyph.unicode !== undefined) {
-            var glyphCharacter = String.fromCharCode (glyph.unicode);
-            var needToExport = !restrictCharactersCheck.checked || restrictCharacterSetInput.value.indexOf (glyphCharacter) != -1;
+			var glyphCharacter = String.fromCharCode (glyph.unicode);
+			var needToExport = true;
+			if (restriction.range !== null) {
+				needToExport = (glyph.unicode >= restriction.range[0] && glyph.unicode <= restriction.range[1]);
+			} else if (restriction.set !== null) {
+				needToExport = (restrictCharacterSetInput.value.indexOf (glyphCharacter) != -1);
+			}
             if (needToExport) {
 
 				var token = {};
