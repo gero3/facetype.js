@@ -120,13 +120,13 @@ var convert = function(font){
     result.familyName = font.familyName;
     result.ascender = Math.round(font.ascender * scale);
     result.descender = Math.round(font.descender * scale);
-    result.underlinePosition = font.tables.post.underlinePosition;
-    result.underlineThickness = font.tables.post.underlineThickness;
+    result.underlinePosition = Math.round(font.tables.post.underlinePosition * scale);
+    result.underlineThickness = Math.round(font.tables.post.underlineThickness * scale);
     result.boundingBox = {
-        "yMin": font.tables.head.yMin,
-        "xMin": font.tables.head.xMin,
-        "yMax": font.tables.head.yMax,
-        "xMax": font.tables.head.xMax
+        "yMin": Math.round(font.tables.head.yMin * scale),
+        "xMin": Math.round(font.tables.head.xMin * scale),
+        "yMax": Math.round(font.tables.head.yMax * scale),
+        "xMax": Math.round(font.tables.head.xMax * scale)
     };
     result.resolution = 1000;
     result.original_font_information = font.tables.name;
