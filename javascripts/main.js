@@ -73,17 +73,18 @@ var convert = function(font){
 		}
 	}
 	
-    font.glyphs.forEach(function(glyph){
-        if (glyph.unicode !== undefined) {
-			var glyphCharacter = String.fromCharCode (glyph.unicode);
+    var glyphIndexMap = font.encoding.cmap.glyphIndexMap;
+    Object.keys(glyphIndexMap).forEach(function (unicode) {
+        if (unicode !== undefined) {
+			var glyphCharacter = String.fromCharCode (unicode);
 			var needToExport = true;
 			if (restriction.range !== null) {
-				needToExport = (glyph.unicode >= restriction.range[0] && glyph.unicode <= restriction.range[1]);
+				needToExport = (unicode >= restriction.range[0] && unicode <= restriction.range[1]);
 			} else if (restriction.set !== null) {
 				needToExport = (restrictCharacterSetInput.value.indexOf (glyphCharacter) != -1);
 			}
             if (needToExport) {
-
+				var glyph = font.glyphs[glyphIndexMap[unicode]];
 				var token = {};
 				token.ha = Math.round(glyph.advanceWidth * scale);
 				token.x_min = Math.round(glyph.xMin * scale);
@@ -113,7 +114,7 @@ var convert = function(font){
 						token.o += " "
 					}
 				});
-				result.glyphs[String.fromCharCode(glyph.unicode)] = token;
+				result.glyphs[glyphCharacter] = token;
 			}
         };
     });
