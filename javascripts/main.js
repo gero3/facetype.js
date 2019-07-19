@@ -77,7 +77,7 @@ var convert = function (font) {
     var glyphIndexMap = font.encoding.cmap.glyphIndexMap;
     Object.keys(glyphIndexMap).forEach(function (unicode) {
 
-        var glyphCharacter = String.fromCharCode(unicode);
+        var glyphCharacter = String.fromCodePoint(unicode);
         var needToExport = true;
         if (restriction.range !== null) {
             needToExport = (unicode >= restriction.range[0] && unicode <= restriction.range[1]);
