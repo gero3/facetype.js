@@ -74,11 +74,23 @@ var convert = function(font){
 	}
 	
     font.glyphs.forEach(function(glyph){
+        const unicodes = [];
         if (glyph.unicode !== undefined) {
-			var glyphCharacter = String.fromCharCode (glyph.unicode);
+            unicodes.push(glyph.unicode);
+        }
+        if (glyph.unicodes.length) {
+            glyph.unicodes.forEach(function(unicode){
+                if (unicodes.indexOf (unicode) == -1) {
+                    unicodes.push(unicode);
+                }
+            })
+        }
+       
+        unicodes.forEach(function(unicode){
+			var glyphCharacter = String.fromCharCode (unicode);
 			var needToExport = true;
 			if (restriction.range !== null) {
-				needToExport = (glyph.unicode >= restriction.range[0] && glyph.unicode <= restriction.range[1]);
+				needToExport = (unicode >= restriction.range[0] && unicode <= restriction.range[1]);
 			} else if (restriction.set !== null) {
 				needToExport = (restrictCharacterSetInput.value.indexOf (glyphCharacter) != -1);
 			}
@@ -113,9 +125,9 @@ var convert = function(font){
 						token.o += " "
 					}
 				});
-				result.glyphs[String.fromCharCode(glyph.unicode)] = token;
+				result.glyphs[String.fromCharCode(unicode)] = token;
 			}
-        };
+        });
     });
     result.familyName = font.familyName;
     result.ascender = Math.round(font.ascender * scale);
