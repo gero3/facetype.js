@@ -73,8 +73,8 @@ var convert = function(font){
 		}
 	}
 	
-    for(let i in font.glyphs.glyphs) {
-        let glyph = font.glyphs.glyphs[i];
+    for (let i = 0; i < font.glyphs.length; i++) {
+        let glyph = font.glyphs.get(i);
     
         const unicodes = [];
         if (glyph.unicode !== undefined) {
