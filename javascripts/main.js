@@ -73,7 +73,9 @@ var convert = function(font){
 		}
 	}
 	
-    font.glyphs.forEach(function(glyph){
+    for (let i = 0; i < font.glyphs.length; i++) {
+        let glyph = font.glyphs.get(i);
+    
         const unicodes = [];
         if (glyph.unicode !== undefined) {
             unicodes.push(glyph.unicode);
@@ -125,11 +127,12 @@ var convert = function(font){
 						token.o += " "
 					}
 				});
-				result.glyphs[String.fromCharCode(unicode)] = token;
+				result.glyphs[String.fromCodePoint(unicode)] = token;
 			}
         });
-    });
-    result.familyName = font.familyName;
+    }
+    
+    font.familyName = result.familyName =  font.names.windows.preferredFamily?.en || font.names.windows.fontFamily?.en;
     result.ascender = Math.round(font.ascender * scale);
     result.descender = Math.round(font.descender * scale);
     result.underlinePosition = Math.round(font.tables.post.underlinePosition * scale);
@@ -142,6 +145,8 @@ var convert = function(font){
     };
     result.resolution = 1000;
     result.original_font_information = font.tables.name;
+
+    font.styleName = font.names.windows.preferredSubfamily?.en || font.names.windows.fontSubfamily?.en || "";
     if (font.styleName.toLowerCase().indexOf("bold") > -1){
         result.cssFontWeight = "bold";
     } else {
